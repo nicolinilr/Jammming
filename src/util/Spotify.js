@@ -74,10 +74,7 @@ const Spotify = {
         const jsonResponse = await response.json();
 
         userID = jsonResponse.id;
-        console.log('headers are...');
-        console.log(headers);
-        console.log('name is...');
-        console.log(name);
+       
         const response2 = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`,{
             method: 'POST',
             headers: headers,
