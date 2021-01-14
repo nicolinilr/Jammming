@@ -54,7 +54,51 @@ const Spotify = {
         });
         
         return songResult;
-    }
+    },
+
+    async savePlaylist(name, trackURIs){
+
+        if(name==='' || trackURIs === []){
+            return;
+        }
+
+        let accessToken = userToken;
+        let headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        };
+        let userID;
+
+        const response = await fetch('https://api.spotify.com/v1/me', {headers: headers});
+
+        const jsonResponse = await response.json();
+
+        userID = jsonResponse.id;
+        console.log('headers are...');
+        console.log(headers);
+        console.log('name is...');
+        console.log(name);
+        const response2 = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`,{
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({'name': name}),
+        });
+
+        const jsonResponse2 = await response2.json();
+
+        const playlistID = jsonResponse2.id;
+
+        await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`,{
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                uris: trackURIs,
+            }),
+        });
+
+        alert('Saved to spotify!');
+
+    },
 };
 
 export default Spotify;
